@@ -15,7 +15,8 @@
 #import "MyFootView.h"
 #import "MyHeadView.h"
 #import "UIImage+Color.h"
-
+#import "HeadImageView.h"
+#import "Masonry.h"
 @interface ViewController ()<UICollectionViewDataSource,UICollectionViewDelegate>
 @property(strong,nonatomic)UICollectionView *myCollectionV;
 /** 导航栏标题 */
@@ -23,14 +24,16 @@
 @end
 @implementation ViewController
 {
-    UIImageView *imageView;
+    HeadImageView *imageView;
     
-    UIView *orangeView;
+    UIButton *orangeView;
     
-    UIView *black;
+    NSInteger btnTag;
+
 }
 - (void)viewDidLoad {
     [super viewDidLoad];
+    btnTag = 0;
     //创建视图
     [self addTheCollectionView];
     [self setUpNavigationBar];
@@ -58,7 +61,7 @@
     [flowL setFooterReferenceSize:CGSizeMake(_myCollectionV.frame.size.width,50)];
     //=======================2===========================
     //创建一个UICollectionView
-    _myCollectionV = [[UICollectionView alloc]initWithFrame:CGRectMake(0,-NavHeight, self.view.frame.size.width,self.view.frame.size.height + NavHeight)collectionViewLayout:flowL];
+    _myCollectionV = [[UICollectionView alloc]initWithFrame:CGRectZero collectionViewLayout:flowL];
     //设置代理为当前控制器
     _myCollectionV.delegate =self;
     _myCollectionV.dataSource =self;
@@ -74,18 +77,19 @@
     //添加视图
     [self.view addSubview:_myCollectionV];
     
-    imageView = [[UIImageView alloc] initWithFrame:CGRectMake(0, -headImagHeight, self.view.frame.size.width, topImgaeHeight)];
-    imageView.image = [UIImage imageNamed:@"img"];
-    imageView.contentMode = UIViewContentModeScaleAspectFill;
-    [imageView setClipsToBounds:YES];
+    [_myCollectionV mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.left.right.offset(0);
+        make.top.offset(-65);
+        make.bottom.offset(0);
+    }];
+    
+    imageView = [[HeadImageView alloc] initWithFrame:CGRectMake(0, -headImagHeight, self.view.frame.size.width, topImgaeHeight)];
     [_myCollectionV addSubview:imageView];
     
 
-    black = [[UIView alloc]initWithFrame:CGRectMake(20, imageView.frame.size.height - 30, 20, 20)];
-    black.backgroundColor = [UIColor redColor];
-    [imageView addSubview:black];
-    
-    orangeView = [[UIView alloc]initWithFrame:CGRectMake(0, -orangeHeight,self.view.frame.size.width, orangeHeight)];
+    orangeView = [UIButton buttonWithType:UIButtonTypeCustom];
+    orangeView.frame = CGRectMake(0, -orangeHeight,self.view.frame.size.width, orangeHeight);
+    [orangeView addTarget:self action:@selector(BtnClick) forControlEvents:UIControlEventTouchUpInside];
     orangeView.backgroundColor = [UIColor yellowColor];
     [_myCollectionV addSubview:orangeView];
 
@@ -122,7 +126,7 @@
 //每个section有多少个元素
 - (NSInteger)collectionView:(UICollectionView *)collectionView numberOfItemsInSection:(NSInteger)section
 {
-    return section + 5;;
+    return section + 5;
 }
 
 
@@ -164,13 +168,12 @@
 -(void)scrollViewDidScroll:(UIScrollView *)scrollView
 {
     CGPoint point = scrollView.contentOffset;
-    NSLog(@"==%f",point.y);
+//    NSLog(@"==%f",point.y);
     if (point.y < -(NavHeight + headImagHeight)) {
         CGRect rect = imageView.frame;
         rect.origin.y = point.y + NavHeight;
         rect.size.height = -(point.y + NavHeight + 60);
         imageView.frame = rect;
-        black.frame = CGRectMake(20, imageView.frame.size.height - 30, 20, 20);
     }else
     {
         if (point.y >= -(NavHeight + orangeHeight * 2)) {
@@ -189,7 +192,7 @@
     if (alpha > 1) {
         alpha = 1;
     }
-    NSLog(@"==%f",alpha);
+//    NSLog(@"==%f",alpha);
 
     self.navigationController.navigationBar.subviews.firstObject.alpha = alpha;
     // 设置导航条标题颜色
@@ -197,4 +200,14 @@
     
 }
 
+-(void)BtnClick
+{
+    NSLog(@"%ld",btnTag);
+    if (btnTag < 10) {
+        [_myCollectionV scrollToItemAtIndexPath:[NSIndexPath indexPathForItem:0 inSection:btnTag] atScrollPosition:UICollectionViewScrollPositionBottom animated:true];
+       
+        btnTag ++;
+    }
+   
+}
 @end
