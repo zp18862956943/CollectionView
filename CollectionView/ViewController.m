@@ -33,7 +33,7 @@
 }
 - (void)viewDidLoad {
     [super viewDidLoad];
-    btnTag = 0;
+    btnTag = 1;
     //创建视图
     [self addTheCollectionView];
     [self setUpNavigationBar];
@@ -204,10 +204,10 @@
 {
     NSLog(@"%ld",btnTag);
     if (btnTag < 10) {
-        [_myCollectionV scrollToItemAtIndexPath:[NSIndexPath indexPathForItem:0 inSection:btnTag] atScrollPosition:UICollectionViewScrollPositionBottom animated:true];
-       
+    [_myCollectionV scrollToItemAtIndexPath:[NSIndexPath indexPathForItem:0 inSection:btnTag] atScrollPosition:UICollectionViewScrollPositionTop animated:true];
         btnTag ++;
+    }else{
+         btnTag = 1;
     }
-   
 }
 @end
