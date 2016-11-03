@@ -26,6 +26,8 @@
     UIImageView *imageView;
     
     UIView *orangeView;
+    
+    UIView *black;
 }
 - (void)viewDidLoad {
     [super viewDidLoad];
@@ -78,8 +80,10 @@
     [imageView setClipsToBounds:YES];
     [_myCollectionV addSubview:imageView];
     
-    NSLog(@"这是新的%f",imageView.frame.origin.y);
 
+    black = [[UIView alloc]initWithFrame:CGRectMake(20, imageView.frame.size.height - 30, 20, 20)];
+    black.backgroundColor = [UIColor redColor];
+    [imageView addSubview:black];
     
     orangeView = [[UIView alloc]initWithFrame:CGRectMake(0, -orangeHeight,self.view.frame.size.width, orangeHeight)];
     orangeView.backgroundColor = [UIColor yellowColor];
@@ -164,8 +168,9 @@
     if (point.y < -(NavHeight + headImagHeight)) {
         CGRect rect = imageView.frame;
         rect.origin.y = point.y + NavHeight;
-        rect.size.height = -(point.y + NavHeight);
+        rect.size.height = -(point.y + NavHeight + 60);
         imageView.frame = rect;
+        black.frame = CGRectMake(20, imageView.frame.size.height - 30, 20, 20);
     }else
     {
         if (point.y >= -(NavHeight + orangeHeight * 2)) {
