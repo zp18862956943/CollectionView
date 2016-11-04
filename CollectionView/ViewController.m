@@ -5,10 +5,11 @@
 //  Created by 周鹏 on 2016/10/29.
 //  Copyright © 2016年 周鹏. All rights reserved.
 //
-#define NavHeight 64.5
+#define NavHeight 64
 #define orangeHeight 60
 #define topImgaeHeight 200
 #define headImagHeight (topImgaeHeight + orangeHeight)
+#define ViewWidth self.view.frame.size.width
 
 #import "ViewController.h"
 #import "MyCollectionViewCell.h"
@@ -79,7 +80,7 @@
     
     [_myCollectionV mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.right.offset(0);
-        make.top.offset(-65);
+        make.top.offset(-NavHeight);
         make.bottom.offset(0);
     }];
     
@@ -88,7 +89,7 @@
     
 
     orangeView = [UIButton buttonWithType:UIButtonTypeCustom];
-    orangeView.frame = CGRectMake(0, -orangeHeight,self.view.frame.size.width, orangeHeight);
+    orangeView.frame = CGRectMake(0, -orangeHeight,ViewWidth, orangeHeight);
     [orangeView addTarget:self action:@selector(BtnClick) forControlEvents:UIControlEventTouchUpInside];
     orangeView.backgroundColor = [UIColor yellowColor];
     [_myCollectionV addSubview:orangeView];
@@ -177,11 +178,11 @@
     }else
     {
         if (point.y >= -(NavHeight + orangeHeight * 2)) {
-            orangeView.frame = CGRectMake(0, NavHeight, 320, orangeHeight);
+            orangeView.frame = CGRectMake(0, NavHeight, ViewWidth, orangeHeight);
             [self.view addSubview:orangeView];
         }else
         {
-            orangeView.frame = CGRectMake(0, -orangeHeight, 320, orangeHeight);
+            orangeView.frame = CGRectMake(0, -orangeHeight, ViewWidth, orangeHeight);
             [_myCollectionV addSubview:orangeView];
         }
     }
