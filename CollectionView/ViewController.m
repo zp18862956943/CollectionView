@@ -34,13 +34,16 @@
     NSArray *ItemNum;
     
     NSMutableArray *heightArr;
+    
+    float MaxHeight;
 
 }
 - (void)viewDidLoad {
     [super viewDidLoad];
-    ItemNum = [NSArray arrayWithObjects:@5,@6,@7,@8,@9,@10,@5,@8,@10,@3, nil];
+    ItemNum = [NSArray arrayWithObjects:@1,@4,@7,@10,@13,@10,@6,@4,@1,@2,@3,@2,@4,nil];
     heightArr = [NSMutableArray arrayWithCapacity:ItemNum.count];
 
+    
     int x = (self.view.frame.size.width - 10) / 100;
     float SumHeight = 0;
     for (int i = 0; i < ItemNum.count; i++) {
@@ -49,6 +52,9 @@
         SumHeight += height;
         [heightArr addObject:[NSNumber numberWithFloat:SumHeight]];
     }
+    
+    
+    MaxHeight = [[heightArr lastObject]floatValue] - self.view.frame.size.height;
     
     btnTag = 1;
     //创建视图
@@ -219,12 +225,20 @@
 
 -(void)BtnClick
 {
+    NSLog(@"_myCollectionV%f =%@",_myCollectionV.contentSize.height,heightArr);
     NSLog(@"%ld",btnTag);
-    if (btnTag <= 10) {
+    if (btnTag <= ItemNum.count) {
         if (btnTag == 1) {
             [_myCollectionV setContentOffset:CGPointMake(0, -64 - 60 - 60)];
         }else{
-            [_myCollectionV setContentOffset:CGPointMake(0, -64 - 60 - 60 + [[heightArr objectAtIndex:btnTag - 2]floatValue])];
+            //加判断，以免出去,理论偏移量是偏移量 - 屏幕高 - 64
+            if ([[heightArr objectAtIndex:btnTag - 2]floatValue] - 64 > MaxHeight) {
+                [_myCollectionV setContentOffset:CGPointMake(0,MaxHeight - 64)];
+            }else
+            {
+                [_myCollectionV setContentOffset:CGPointMake(0, -64 - 60 - 60 + [[heightArr objectAtIndex:btnTag - 2]floatValue])];
+            }
+            
         }
         btnTag ++;
     }else{
