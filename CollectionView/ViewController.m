@@ -30,10 +30,26 @@
     UIButton *orangeView;
     
     NSInteger btnTag;
+    
+    NSArray *ItemNum;
+    
+    NSMutableArray *heightArr;
 
 }
 - (void)viewDidLoad {
     [super viewDidLoad];
+    ItemNum = [NSArray arrayWithObjects:@5,@6,@7,@8,@9,@10,@5,@8,@10,@3, nil];
+    heightArr = [NSMutableArray arrayWithCapacity:ItemNum.count];
+
+    int x = (self.view.frame.size.width - 10) / 100;
+    float SumHeight = 0;
+    for (int i = 0; i < ItemNum.count; i++) {
+        int num = [[ItemNum objectAtIndex:i]intValue];
+        float height = ((num - 1) / x + 1) * 140 + 100;
+        SumHeight += height;
+        [heightArr addObject:[NSNumber numberWithFloat:SumHeight]];
+    }
+    
     btnTag = 1;
     //创建视图
     [self addTheCollectionView];
@@ -121,13 +137,13 @@
 //有多少个Section
 - (NSInteger)numberOfSectionsInCollectionView:(UICollectionView *)collectionView
 {
-    return 10;
+    return ItemNum.count;
 }
 
 //每个section有多少个元素
 - (NSInteger)collectionView:(UICollectionView *)collectionView numberOfItemsInSection:(NSInteger)section
 {
-    return section + 5;
+    return [[ItemNum objectAtIndex:section]intValue];
 }
 
 
@@ -204,11 +220,19 @@
 -(void)BtnClick
 {
     NSLog(@"%ld",btnTag);
-    if (btnTag < 10) {
-    [_myCollectionV scrollToItemAtIndexPath:[NSIndexPath indexPathForItem:0 inSection:btnTag] atScrollPosition:UICollectionViewScrollPositionTop animated:true];
+    if (btnTag <= 10) {
+        if (btnTag == 1) {
+            [_myCollectionV setContentOffset:CGPointMake(0, -64 - 60 - 60)];
+        }else{
+            [_myCollectionV setContentOffset:CGPointMake(0, -64 - 60 - 60 + [[heightArr objectAtIndex:btnTag - 2]floatValue])];
+        }
         btnTag ++;
     }else{
          btnTag = 1;
+        [_myCollectionV setContentOffset:CGPointMake(0, -64 - 60 - 60)];
+
     }
+    
+
 }
 @end
